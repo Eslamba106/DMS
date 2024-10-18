@@ -6,8 +6,11 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\FilesController;
+use App\Http\Controllers\Admin\FolderController;
+use App\Http\Controllers\Admin\DocumentController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\DepartmentsController;
+use App\Http\Controllers\Admin\FileRequestController;
 use App\Http\Controllers\Admin\UserManagmentController;
 
 
@@ -81,7 +84,37 @@ Route::group(['prefix' => 'departments'], function () {
     Route::get('/delete/{slug}', [DepartmentsController::class ,'destroy'])->name('departments.delete');
 
 });
+Route::group(['prefix' => 'documents'], function () {
 
+    Route::get('/', [DocumentController::class, 'index'])->name('documents.index');
+    Route::post('/store', [DocumentController::class, 'store'])->name('documents.store');
+    Route::get('/show/{id}', [DocumentController::class, 'show'])->name('documents.show');
+    Route::get('/create', [DocumentController::class, 'create'])->name('documents.create');
+    Route::get('/signature/{id}', [DocumentController::class, 'createSignature'])->name('signatures');
+    Route::post('/save-signature', [DocumentController::class, 'signature'])->name('save.signatures');
+
+
+});
+
+// Route::resource('folders', FolderController::class);
+// Route::post('/update-folder-positions', [FolderController::class, 'updateFolderPositions'])->name('folders.updatePositions');
+// Route::post('/update-folder-child-positions', [FolderController::class, 'updateFolderChildPositions'])->name('folders.updateChildPositions');
+// Route::post('/folders/details', [FolderController::class, 'fetchDetails'])->name('folders.fetchDetails');
+// Route::post('/folders/download-zip', [FolderController::class, 'downloadZip'])->name('folders.downloadZip');
+// Route::post('/folders/delete', [FolderController::class, 'deleteSelecetdFolder'])->name('folders.deleteSelecetdFolder');
+
+// Route::get('/document/upload', [DocumentController::class, 'index'])->name('fileRequest.upload');
+// Route::post('/request-document', [FileRequestController::class, 'store'])->name('fileRequest.store');
+// Route::post('/upload', [DocumentController::class, 'uploadDocumentFiles'])->name('upload');
+// Route::post('/change-document', [DocumentController::class, 'changeFile'])->name('changeFile');
+// Route::get('/filter-documents-by-tags', [DocumentController::class, 'filterDocumentByTag'])->name('filterDocumentByTag');
+// Route::post('/update-document-order', [DocumentController::class, 'updateDocumentOrder'])->name('update.document.order');
+
+
+    // // Tags Route
+    // Route::resource('tags', TagController::class);
+    // Route::get('/search-tags', [TagController::class, 'searchTags'])->name('searchTags');
+    // Route::get('/add-tag', [TagController::class, 'addTag'])->name('addTag');
 
 // Route::get('openfiles', [FilesController::class , 'readAndEditMyFile'])->name('openfiles');
 

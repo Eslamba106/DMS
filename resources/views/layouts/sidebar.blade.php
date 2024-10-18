@@ -73,6 +73,54 @@
                        
                     </ul>
                 </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
+                        {{-- <i class="fa fa-id-badge"></i>  --}}
+                        <i class="fas fa-tags nav-icon"></i>
+
+
+                        <span class="hide-menu">{{ __("files.all_files") }} </span>
+                    </a>
+                    <ul aria-expanded="false" class="collapse first-level">
+                        <li class="sidebar-item">
+                            <a href="{{ route('documents.index') }}" class="sidebar-link">
+                                <i class="mdi mdi-email"></i>
+                                <span class="hide-menu">{{ __('files.all_files') }}</span>
+                            </a>
+                        </li>
+                            <li class="sidebar-item">
+                                <a href="{{ route('documents.create') }}" class="sidebar-link">
+                                    <i class="mdi mdi-email"></i>
+                                    <span class="hide-menu">{{ __('files.create_file') }}</span>
+                                </a>
+                            </li>
+                       
+                    </ul>
+                </li>
+                {{-- <li class="sidebar-item">
+                    <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
+                            
+                        <i class="fas fa-tags nav-icon"></i>
+
+
+                        <span class="hide-menu">{{ __("folders.all_folders") }} </span>
+                    </a>
+                    <ul aria-expanded="false" class="collapse first-level">
+                        <li class="sidebar-item">
+                            <a href="{{ route('all_departments') }}" class="sidebar-link">
+                                <i class="mdi mdi-email"></i>
+                                <span class="hide-menu">{{ __('folders.all_folders') }}</span>
+                            </a>
+                        </li>
+                            <li class="sidebar-item">
+                                <a href="{{ route('folders.create') }}" class="sidebar-link">
+                                    <i class="mdi mdi-email"></i>
+                                    <span class="hide-menu">{{ __('folders.create_folders') }}</span>
+                                </a>
+                            </li>
+                       
+                    </ul>
+                </li> --}}
 
         
                           

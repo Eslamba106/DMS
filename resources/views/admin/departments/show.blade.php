@@ -43,7 +43,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Tickets</h4>
+                    <h4 class="card-title">{{ __('departments.departments') }}</h4>
                     <div class="row m-t-40">
                         <!-- Column -->
                         <div class="col-md-6 col-lg-3 col-xlg-3">

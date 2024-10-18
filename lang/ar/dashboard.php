@@ -20,4 +20,6 @@ return [
     'arabic'               => "العربية",
     'english'               => "English",
     'deleted_successfully'  => "تم الحذف بنجاح",
+    'created_at'  => 'اضيف في',
+    'created_by'  => 'اضيف بواسطة',
 ];

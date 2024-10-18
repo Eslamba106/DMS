@@ -32,12 +32,13 @@ class AuthController extends Controller
             // }elseif ($user->role_name == "admin") {
             //     return redirect()->route('admin.dashboard');
             // }
-        } elseif(Auth::attempt(['user_name' => $request['email'], 'password' => $request['password']])){
-            $user = User::where('user_name', $request['email'])->first();
-            auth()->login($user);
-            return redirect()->route('dashboard');
+        } 
+            // elseif(Auth::attempt(['user_name' => $request['email'], 'password' => $request['password']])){
+            //     $user = User::where('user_name', $request['email'])->first();
+            //     auth()->login($user);
+            //     return redirect()->route('dashboard');
 
-        }
+            // }
         else {
             return back()->withErrors([
                 'loginError' => 'خطأ في البريد الالكتروني او كلمة المرور . من فضلك حاول مرة اخري',

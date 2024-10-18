@@ -19,6 +19,7 @@ return [
     'created_successfully'   => "Created Successfully !",
     'arabic'               => "العربية",
     'english'               => "English",
-
+    'created_at'  => 'Created At',
+    'created_by'  => 'Created By',
     'deleted_successfully'  => "Deleted Successfully ! ",
 ];

@@ -138,6 +138,58 @@
         <!-- Right Sidebar -->
         <!-- ============================================================== -->
     </div>
+    {{-- <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 d-flex justify-content-center">
+            <button class="btn btn-primary" onclick="serviceCharge()">{{ __('Add Service Charge') }}</button>
+        </div>
+        <div id="formsContainer" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3">
+            <!-- سيتم إضافة النماذج هنا -->
+        </div>
+    </div> --}}
+    
+{{-- <div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 d-flex justify-content-center">
+        <button class="btn btn-primary" onclick="serviceCharge()">{{ __('Add Service Charge') }}</button>
+    </div>
+    <div id="formsContainer" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3">
+    </div>
+</div>
+
+<script>
+    function serviceCharge() {
+        var formDiv = document.createElement('div');
+        formDiv.classList.add('mb-3');
+
+        var uniqueId = 'form-' + new Date().getTime();
+        formDiv.id = uniqueId;
+
+        formDiv.innerHTML = `
+            <form>
+                <div class="form-group">
+                    <label for="serviceName">Service Name</label>
+                    <input type="text" class="form-control" id="serviceName" placeholder="Enter service name">
+                </div>
+                <div class="form-group">
+                    <label for="serviceCharge">Service Charge</label>
+                    <input type="number" class="form-control" id="serviceCharge" placeholder="Enter service charge">
+                </div>
+                <button type="submit" class="btn btn-success">Submit</button>
+                <button type="button" class="btn btn-danger" onclick="removeForm('${uniqueId}')">Remove</button>
+            </form>
+        `;
+
+        document.getElementById('formsContainer').appendChild(formDiv);
+    }
+
+    function removeForm(id) {
+        var formDiv = document.getElementById(id);
+        if (formDiv) {
+            formDiv.remove();
+        }
+    }
+
+</script> --}}
+    
     <!-- ============================================================== -->
     <!-- All Required js -->
     <!-- ============================================================== -->
