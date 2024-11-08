@@ -3,10 +3,10 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
@@ -58,11 +58,17 @@ class User extends Authenticatable
 
         return in_array($section_name, $this->permissions);
     }
-    public function scopeActive(Builder $builder){
-        $builder->where('status' , 'active');
+    public function scopeActive(Builder $builder)
+    {
+        $builder->where('status', 'active');
     }
-    public function departments(){
-        return $this->belongsToMany(Department::class , 'departments_users');
+    public function departments()
+    {
+        return $this->belongsToMany(Department::class, 'departments_users');
+    }
+    public function documentLogs()
+    {
+        return $this->hasMany(DocumentLog::class);
     }
 
 }

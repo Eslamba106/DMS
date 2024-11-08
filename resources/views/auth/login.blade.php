@@ -64,7 +64,7 @@
                                     <input type="text" class="form-control form-control-lg" name="password" placeholder="{{ __('login.password') }}" aria-label="Password" aria-describedby="basic-addon1">
                                     @error('password') <span class="error text-danger">{{ $message }}</span> @enderror
                                 </div>
-                                <div class="form-group row">
+                                <!-- <div class="form-group row">
                                     <div class="col-md-12">
                                         <div class="custom-control custom-checkbox">
                                             <input type="checkbox" class="custom-control-input" id="customCheck1">
@@ -73,7 +73,7 @@
                                             {{-- <a href="{{ route('register-page') }}" class="custom-control-label">{{ __('login.register') }}</a> --}}
                                         </div>
                                     </div>
-                                </div>
+                                </div> -->
                                 <div class="form-group text-center">
                                     <div class="col-xs-12 p-b-20">
                                         <button class="btn btn-block btn-lg btn-info" type="submit">{{ __('login.login') }}</button>

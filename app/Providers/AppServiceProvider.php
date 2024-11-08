@@ -26,6 +26,7 @@ class AppServiceProvider extends ServiceProvider
         } else {
             App::setLocale(config('app.locale')); 
         }
+        
         Paginator::useBootstrap();
 
     }

@@ -9,15 +9,20 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Document extends Model
 {
-    use HasFactory;
+    use HasFactory , SoftDeletes;
     protected $guarded = [];
     public function owners(){
         return $this->belongsTo(User::class , 'owner');
     }
-    public function department(){
-        return $this->belongsTo(Department::class , 'department_id');
+    public function departments(){
+        return $this->belongsToMany(Department::class, 'departments_documents', 'document_id', 'department_id');
     }
     public function signature(){
         return $this->hasMany(Signature::class , 'document_id');
     }
+    public function logs()
+{
+    return $this->hasMany(DocumentLog::class);
+}
+
 }

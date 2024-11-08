@@ -1,20 +1,19 @@
 @extends('layouts.dashboard')
 
 @section('title')
-    {{ __('roles.roles') }}
+{{ __('documents.create_document') }}
 @endsection
 @section('css')
     <script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
 @endsection
 
-@section('page_name')
-    {{ __('roles.all_roles') }}
-@endsection
+
 @section('content')
     <div class="page-breadcrumb">
         <div class="row">
             <div class="col-5 align-self-center">
-                <h4 class="page-title">{{ __('departments.departments') }}</h4>
+                <h4 class="page-title">    {{ __('documents.create_document') }}
+                </h4>
                 <div class="d-flex align-items-center">
 
                 </div>
@@ -52,14 +51,14 @@
                             </div>
                             <div class="form-group">
                                 <label for="">{{ __('departments.departments') }}</label>
-                                <select name="department_id" id="" class="form-control">
+                                <select name="department_id[]"  class="form-control select2" multiple="multiple">
                                     <option value="">{{ __('departments.select_department') }}</option>
                                     @foreach ($departments as $department)
                                         <option value="{{ $department->id }}">{{ $department->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
-                            <h4 class="card-title">{{ __('files.content') }}</h4>
+                            <h4 class="card-title">{{ __('documents.content') }}</h4>
 
                             <textarea id="mymce" name="contents"></textarea>
                             <div class="form-group mt-2"
@@ -125,6 +124,14 @@
 
                 });
             }
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('.select2').select2({
+                placeholder: "اختر العناصر",
+                allowClear: true
+            });
         });
     </script>
     {{-- <script>

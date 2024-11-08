@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\User;
-use App\Models\Document;
-use App\Models\Signature;
-use App\Models\Department;
-use Illuminate\Http\Request;
-use App\Services\DocumentService;
 use App\Http\Controllers\Controller;
+use App\Models\Department;
+use App\Models\Document;
+use App\Models\DocumentLog;
+use App\Models\Signature;
+use App\Models\User;
+use App\Services\DocumentService;
+use Illuminate\Http\Request;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class DocumentController extends Controller
 {
+    use AuthorizesRequests;
 
     public function __construct(protected DocumentService $documentService)
     {
@@ -19,200 +22,224 @@ class DocumentController extends Controller
 
     public function index()
     {
-        $documents = Document::get();
+        $this->authorize('all_documents');
+
+        $documents = Document::paginate();
         $departments = Department::get();
+        return view('admin.docs.index', compact('documents', 'departments'));
+    }
+    public function main_archive()
+    {
+        $this->authorize('show_archive');
+        $documents = Document::onlyTrashed()->paginate();
+        $departments = Department::get();
+        // dd();/
         return view('admin.docs.index', compact('documents', 'departments'));
     }
     public function store(Request $request)
     {
+        $this->authorize('create_documents');
+
         $request->validate([
             'name' => 'required',
             'contents' => 'required',
-            'department_id' => 'required',
+            // 'department_id' => 'required',
         ]);
         $owner = auth()->user();
-
-        Document::create([
+        // dd($request->all());
+        $document = Document::create([
             'name' => $request->name,
-            'department_id' => $request->department_id,
+            // 'department_id' => $request->department_id,
             'owner' => $owner->id,
             'content' => $request->contents,
         ]);
+        if ($document && $request->has('department_id')) {
+            $document->departments()->sync($request->department_id);
+        }
 
         return back()->with('success', 'تم اضافة الملف بنجاح');
     }
 
     public function show($id)
     {
+        $this->authorize('show_documents');
+
         $document = Document::findOrFail($id);
         return view('admin.docs.show', compact('document'));
     }
+    public function show_department_documents($id)
+    {
+        $this->authorize('show_departments_documents');
+        $documents = Document::where('department_id', $id)->get();
+        return view('admin.docs.show_department_documents', compact('documents'));
+    }
     public function create()
     {
+        $this->authorize('create_documents');
 
         $departments = Department::get();
 
         return view('admin.docs.create', compact(['departments']));
     }
-    public function createSignature($id)
+    public function edit($id)
     {
+        $this->authorize('edit_documents');
 
+        $departments = Department::get();
         $document = Document::findOrFail($id);
 
+        return view('admin.docs.edit', compact(['departments', 'document']));
+    }
+    public function update(Request $request, $id)
+    {
+        $this->authorize('edit_documents');
+
+        $request->validate([
+            'name' => 'required',
+            'contents' => 'required',
+        ]);
+        $owner = auth()->user();
+        $document = Document::findOrFail($id);
+
+        $oldName = $document->name;
+        $oldContent = $document->content;
+        $oldDepartments = $document->departments->pluck('id')->toArray();
+
+        $document->update([
+            'name' => $request->name,
+            'content' => $request->contents,
+        ]);
+        if ($document && $request->has('department_id')) {
+            $document->departments()->sync($request->department_id);
+        }
+        if ($oldName !== $request->name) {
+            DocumentLog::create([
+                'document_id' => $document->id,
+                'user_id' => $owner->id,
+                'action' => "عدل اسم الملف من : {$oldName} إلى : {$request->name} ",
+                'created_at' => now(),
+            ]);
+        }
+
+        if ($oldContent !== $request->contents) {
+            DocumentLog::create([
+                'document_id' => $document->id,
+                'user_id' => $owner->id,
+                'action' => "عدل المحتوى من : {$oldContent}  إلى : {$request->contents} ",
+                'created_at' => now(),
+            ]);
+        }
+
+        $newDepartments = is_array($request->department_id) ? $request->department_id : []; 
+
+        $addedDepartments = array_diff($newDepartments, $oldDepartments);
+        $removedDepartments = array_diff($oldDepartments, $newDepartments);
+        
+         
+        foreach ($addedDepartments as $departmentId) {
+            $department = Department::find($departmentId); 
+            if ($department) {  
+                DocumentLog::create([
+                    'document_id' => $document->id,
+                    'user_id' => $owner->id,
+                    'action' => "تمت إضافتة الي قسم \" {$department->name}\"",
+                    'created_at' => now(),
+                ]);
+            }
+        }
+        
+        // تسجيل الأقسام المحذوفة
+        foreach ($removedDepartments as $departmentId) {
+            $department = Department::find($departmentId); // استخدم find للحصول على القسم مباشرة
+            if ($department) {
+                DocumentLog::create([
+                    'document_id' => $document->id,
+                    'user_id' => $owner->id,
+                    'action' => "تمت حذفه من قسم \" {$department->name} \"",
+                    'created_at' => now(),
+                ]);
+            }
+        }
+        
+        
+
+        return back()->with('success', 'تم تعديل الملف بنجاح');
+    }
+    public function createSignature($id)
+    {
+        $this->authorize('add_sginature');
+
+        $document = Document::findOrFail($id);
         return view('admin.docs.signature', compact(['document']));
     }
 
-    public function signature(Request $request){
-        // dd($request->all());
-            $request->validate([
-                'signatures' => 'required|array',
-                'signatures.*' => 'string',
-                'document_id' => 'required',
+    public function signature(Request $request)
+    {
+        $this->authorize('add_sginature');
+
+        $request->validate([
+            'signatures' => 'required|array',
+            'signatures.*' => 'string',
+            'document_id' => 'required',
+        ]);
+
+        foreach ($request->signatures as $signatureData) {
+            Signature::create([
+                'user_id' => auth()->id(),
+                'document_id' => $request->document_id,
+                'image' => $signatureData,
             ]);
-    
-            foreach ($request->signatures as $signatureData) {
-                Signature::create([
-                    'user_id' => auth()->id(),  
-                    'document_id' =>$request->document_id,  
-                    'image' => $signatureData,
-                ]);
-            }
-    
-            return back()->with('success', 'All signatures saved successfully!');
+        }
+        DocumentLog::create([
+            'document_id' => $request->document_id,
+            'user_id' => auth()->id(),
+            'action' => 'وقع علي الوثيقة',
+            'created_at' => now(),
+        ]);
+
+        return back()->with('success', 'All signatures saved successfully!');
     }
-    // return back()->with('error', 'لم يتمكن من تحميل الملف. حاول مرة أخرى.');
-    // }
-//     public function store(Request $request)
-//     {
-//         $request->validate([
-//             'name' => 'required',
-//             'file_path' => 'required',
-//             'department_id' => 'required',
-//         ]);
-//         // dd($request->all());$filename = $pdf->hashName();
-// // $path = $pdf->storeAs('pdfs', $filename, 'public');
 
-//         if ($request->hasFile('file_path')) {
-//             $pdf = $request->file('file_path');
-//             $filename = time() . '_' . $pdf->getClientOriginalName();
-//             $path = $pdf->storeAs('docs', $filename, 'public');
+    public function add_to_department(Request $request)
+    {
+        $this->authorize('share_with_departments');
 
-//             // يمكنك حفظ مسار الملف في قاعدة البيانات إذا أردت
-//             Document::create([
-//                 'file_path' => $path,
-//                 'name' => $request->name,
-//                 'department_id' => $request->department_id,
-//             ]);
+        $document = Document::where('id', $request->document_id)->first();
+        if ($document && $request->has('department_id')) {
+            $document->departments()->attach($request->department_id);
+        }
+        return redirect()->back()->with('success', 'تم الاضافة بنجاح');
+    }
+    public function archive($id)
+    {
+        $this->authorize('archive');
+        $docs = Document::findOrFail($id);
+        $docs->delete();
+        return redirect()->back()->with('success', 'تم الاضافة الي الارشيف');
+    }
+    public function delete_archive($id)
+    {
+        $this->authorize('delete_from_archive');
+  
+        $docs = Document::withTrashed()->where('id', $id)->restore();
 
-//             return back()->with('success', 'تم اضافة الملف بنجاح');
-//         }
+        return redirect()->back()->with('success', 'تم الغاء الارشفة');
+    }
+    public function delete($id)
+    {
+        $this->authorize('delete_documents');
+        $docs = Document::findOrFail($id);
+        $docs->forceDelete();
+        return redirect()->back()->with('success', 'تم الحذف بنجاح');
+    }
+    public function follow($id)
+    {
+        $this->authorize('follow_document');
 
-//         return back()->with('error', 'لم يتمكن من تحميل الملف. حاول مرة أخرى.');
-//     }
+        $docs = Document::findOrFail($id);
+        $actions = DocumentLog::orderBy('created_at' , 'asc')->get();
+        return view('admin.docs.follow' , compact('docs' , 'actions'));
+    }
 
 
-    // public function updateDocumentOrder(Request $request)
-    // {
-    //     try {
-
-    //         // Begin transaction
-    //         DB::beginTransaction();
-
-    //         $folderId = $request->folder_id;
-
-    //         $this->documentService->setUpdateDocumentOrder($folderId, $request->document_ids);
-
-    //         // Commit transaction
-    //         DB::commit();
-
-    //         return response()->json(['url' => route('getFiles', $folderId)], 200);
-    //     } catch (\Throwable $th) {
-    //         // Rollback transaction on failure
-    //         DB::rollback();
-    //         return response()->json(['error' => $th->getMessage()]);
-    //     }
-    // }
-
-    // public function getFiles($folder)
-    // {
-    //     $tags = request()->tags ?? [];
-
-    //     $documents = $this->documentService->getFolderFiles($folder,  $tags)['documents'];
-    //     $folderInfo =  $this->documentService->getFolderFiles($folder,  $tags)['folderInfo'];
-    //     $folderData =  $this->documentService->getFolderFiles($folder,  $tags)['folderData'];
-
-    //     // dd($folderInfo);
-
-    //     $view = view('documents.contents', ['documents' => $documents])->render();
-    //     $folderInfo = view('folders.info', ['folderInfo' => $folderInfo])->render();
-    //     $folders = view('layouts.sidebar', ['folders' => $folderData])->render();
-    //     $categoriesView = view('folders.categories', ['folder' => $folder])->render();
-
-    //     return response()->json([
-    //         'html' => $view, 'folderInfoHml' => $folderInfo,
-    //         'folder_id' => $folder, 'folderHtml' => $folders, 'categoriesHtml' => $categoriesView
-    //     ]);
-    // }
-
-    // function filterDocumentByTag(Request $request)
-    // {
-    //     $documents = $this->documentService->setFilterDocumentByTag($request->folder,  $request->tags ?? []);
-
-    //     $view = view('documents.contents', ['documents' => $documents])->render();
-
-    //     return response()->json(['html' => $view]);
-    // }
-
-    // public function updateVisibility(Request $request)
-    // {
-    //     $documentId = $request->input('document_id');
-    //     $visibility = $request->input('visibility');
-
-    //     // Update the visibility of the document
-    //     $document = Document::find($documentId);
-
-    //     if (!$document) {
-    //         return response()->json(['message' => 'Document not found'], 404);
-    //     }
-
-    //     $document->update(['visibility' => $visibility === 'private' ? 'public' : 'private']);
-
-    //     return response()->json([
-    //         'message' => 'Visibility updated successfully',
-    //         'visibility' => $document->visibility,
-    //         'url' => route('getFiles', $document->folder_id)
-    //     ]);
-    // }
-
-    // public function sendDocumentEmail(Request $request)
-    // {
-    //     $notifications = $this->documentService->setSendDocumentEmail($request);
-
-    //     $view = view('documents.comments', compact('notifications'))->render();
-
-    //     return response()->json(['message' => 'Email sent successfully!', 'html' => $view]);
-    // }
-
-    // public function getDocumentComments(Request $request)
-    // {
-    //     $notifications = $this->documentService->getDocumentNotifications($request->document_id);
-
-    //     $view = view('documents.comments', compact('notifications'))->render();
-
-    //     return response()->json(['html' => $view]);
-    // }
-
-    // public function uploadDocumentFiles(StoreDocumentRequest $request)
-    // {
-    //     $folderId = $this->documentService->setUploadDocumentFiles($request);
-
-    //     return response()->json(['message' => 'Files uploaded successfully', 'url' => route('getFiles', $folderId)], 200);
-    // }
-
-    // function changeFile(Request $request)
-    // {
-    //     $folderId = $this->documentService->setChangeFile($request);
-
-    //     return response()->json(['message' => 'Document updated successfully', 'url' => route('getFiles', $folderId)], 200);
-    // }
 }

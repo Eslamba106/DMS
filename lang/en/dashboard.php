@@ -22,4 +22,14 @@ return [
     'created_at'  => 'Created At',
     'created_by'  => 'Created By',
     'deleted_successfully'  => "Deleted Successfully ! ",
+    'print'                 => "Print",
+    'clear'                 => "Clear",
+    'archive'               => "Add To Archive",
+    'share'                 => "Share",
+    'main_archive'          => "The Archive",
+    'delete_archive'        => "Delete From Archive",
+    'follow'                =>  "Follow docs",
+    'edited_at'  => "Edited at",
+    'edited_by'  => "Edited By",
+
 ];

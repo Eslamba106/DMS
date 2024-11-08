@@ -9,30 +9,29 @@
     {{ __('roles.all_roles') }}
 @endsection
 @section('content')
+    <div class="page-breadcrumb">
+        <div class="row">
+            <div class="col-5 align-self-center">
+                <h4 class="page-title">{{ __('roles.all_roles') }}</h4>
+                <div class="d-flex align-items-center">
 
-<div class="page-breadcrumb">
-    <div class="row">
-        <div class="col-5 align-self-center">
-            <h4 class="page-title">{{ __('roles.all_roles') }}</h4>
-            <div class="d-flex align-items-center">
-
+                </div>
             </div>
-        </div>
-        <div class="col-7 align-self-center">
-            <div class="d-flex no-block justify-content-end align-items-center">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item">
-                            <a href="#">{{ __('dashboard.home') }} </a>
-                        </li>
-                        <li class="breadcrumb-item active" aria-current="page">{{ __('dashboard.all_roles') }}</li>
-                    </ol>
-                </nav>
+            <div class="col-7 align-self-center">
+                <div class="d-flex no-block justify-content-end align-items-center">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="#">{{ __('dashboard.home') }} </a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">{{ __('dashboard.all_roles') }}</li>
+                        </ol>
+                    </nav>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<div class="mt-5"></div>
+    <div class="mt-5"></div>
     <div class="modal fade" id="delete_section" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -94,17 +93,19 @@
                                         </td>
                                         <td>{{ $role->created_at }}</td>
                                         <td>
-                                            {{-- @can('admin_roles_edit') --}}
-                                            <a href="{{ route('admin.roles.edit' , $role->id ) }}"
-                                                class="btn-transparent text-primary">
-                                                <i class="fa fa-edit"></i>
-                                            </a>
+                                            @can('Edit_Admin_Roles')
+                                                <a href="{{ route('admin.roles.edit', $role->id) }}"
+                                                    class="btn-transparent text-primary">
+                                                    <i class="fa fa-edit"></i>
+                                                </a>
+                                            @endcan
                                             @if ($role->name == 'admin' || $role->name == 'user')
-                                                
-                                            @else 
-                                                <a href="" class="btn btn-sm btn-outline-danger" data-toggle="modal"
-                                                    data-section_id="{{ $role->id }}" data-target="#delete_section"><i
-                                                        class="fa fa-trash"></i></a>
+                                            @else
+                                                @can('Delete_Admin_Roles')
+                                                    <a href="" class="btn btn-sm btn-outline-danger" data-toggle="modal"
+                                                        data-section_id="{{ $role->id }}" data-target="#delete_section"><i
+                                                            class="fa fa-trash"></i></a>
+                                                @endcan
                                             @endif
 
 

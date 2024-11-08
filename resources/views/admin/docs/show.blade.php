@@ -1,7 +1,7 @@
 @extends('layouts.dashboard')
 
 @section('title')
-    {{ __('roles.roles') }}
+    {{ __('documents.show_document') }}
 @endsection
 
 @section('css')
@@ -9,9 +9,7 @@
         .custom-class {
             border: none;
             border-top: 2px solid #000;
-            /* Adjust thickness and color */
             margin: 20px 0;
-            /* Adjust margin as needed */
         }
     </style>
 @endsection
@@ -22,7 +20,7 @@
     <div class="page-breadcrumb">
         <div class="row">
             <div class="col-5 align-self-center">
-                <h4 class="page-title">{{ __('departments.departments') }}</h4>
+                <h4 class="page-title">    {{ __('documents.show_document') }} </h4>
                 <div class="d-flex align-items-center">
 
                 </div>
@@ -34,7 +32,8 @@
                             <li class="breadcrumb-item">
                                 <a href="#">{{ __('dashboard.home') }} </a>
                             </li>
-                            <li class="breadcrumb-item active" aria-current="page">{{ __('dashboard.dashboard') }}</li>
+                            <li class="breadcrumb-item active" aria-current="page">    {{ __('documents.show_document') }}
+                            </li>
                         </ol>
                     </nav>
                 </div>
@@ -48,9 +47,9 @@
 
         <div class="text-right">
             <a href="{{ route('signatures', $document->id) }}"
-                class="btn btn-primary">{{ __('files.add_signature') }}</a>
+                class="btn btn-primary">{{ __('documents.add_signature') }}</a>
             <button id="print" class="btn btn-default btn-outline" type="button"> <span><i
-                        class="fa fa-print"></i> Print</span> </button>
+                        class="fa fa-print"></i>{{ __('dashboard.print') }}</span> </button>
         </div>
     </div>
     <div class="row">
@@ -62,7 +61,7 @@
                     <div class="col-md-12">
                         {!! clean_html($document->content) !!}
                         @if ($document->signature->isNotEmpty())
-                        <div style="display: flex; justify-content: space-between; flex-wrap: wrap;">
+                        <div style="display: flex; justify-content: space-between; flex-wrap: wrap;margin-top:30px">
                             @foreach ($document->signature as $signature)
                                 <div style="text-align: center; width: 48%;">
                                     <h4>{{ App\Models\User::where('id' , $signature->user_id)->first()->name }}</h4>

@@ -1,8 +1,7 @@
 @extends('layouts.dashboard')
 
 @section('title')
-    {{ __('roles.roles') }}
-@endsection
+{{ __('documents.signatures') }}@endsection
 @section('css')
     <script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
 @endsection
@@ -14,7 +13,7 @@
     <div class="page-breadcrumb">
         <div class="row">
             <div class="col-5 align-self-center">
-                <h4 class="page-title">{{ __('departments.departments') }}</h4>
+                <h4 class="page-title">{{ __('documents.signatures') }}</h4>
                 <div class="d-flex align-items-center">
 
                 </div>
@@ -37,13 +36,13 @@
     <div class="mb-5"></div>
     <div class="container-fluid"> 
       
-        <button id="add-signature-pad" class="btn btn-success mb-2">Add Signature</button>
+        <button id="add-signature-pad" class="btn btn-success mb-2">{{ __("documents.add_signature") }}</button>
         <div id="signature-pads-container"></div>
 
         <form id="signature-form" method="POST" action="{{ route('save.signatures') }}">
             @csrf
             <input type="hidden" name="document_id" value="{{ $document->id }}">
-            <button type="submit" class="btn btn-primary">Save All Signatures</button>
+            <button type="submit" class="btn btn-primary">{{ __("documents.save_all_signatures") }}</button>
             @error('document_id') <span class="error text-danger">{{ $message }}</span> @enderror
             @error('signatures') <span class="error text-danger">{{ $message }}</span> @enderror
         </form>
@@ -120,17 +119,17 @@ function createSignaturePad() {
 
     // زر لمسح التوقيع
     const clearButton = document.createElement('button');
-    clearButton.textContent = 'Clear';
-    clearButton.classList.add('btn', 'btn-danger'); // إضافة كلاس Bootstrap
+    clearButton.textContent = "{{ __('dashboard.clear') }}";
+    clearButton.classList.add('btn', 'btn-danger' , 'm-1'); 
     clearButton.addEventListener('click', () => {
         signaturePad.clear();
-        inputElement.value = ''; // إفراغ قيمة الحقل المخفي عند مسح التوقيع
+        inputElement.value = '';
     });
 
     // زر لحذف مساحة التوقيع
     const deleteButton = document.createElement('button');
-    deleteButton.textContent = 'Delete';
-    deleteButton.classList.add('btn', 'btn-warning'); // يمكنك استخدام كلاس آخر لـ Bootstrap
+    deleteButton.textContent = "{{ __('dashboard.delete') }}";
+    deleteButton.classList.add('btn', 'btn-warning'); 
     deleteButton.addEventListener('click', () => {
         padContainer.remove();
     });

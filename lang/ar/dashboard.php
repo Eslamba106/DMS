@@ -20,6 +20,16 @@ return [
     'arabic'               => "العربية",
     'english'               => "English",
     'deleted_successfully'  => "تم الحذف بنجاح",
+    'edited_at'  => 'تم التعديل في',
+    'edited_by'  => 'تم التعديل بواسطة',
     'created_at'  => 'اضيف في',
     'created_by'  => 'اضيف بواسطة',
+    'print'                 => 'طباعة',
+    'clear'                 => "مسح التوقيع",
+    'archive'               => "اضافة الي الارشيف",
+    'share'                 => "المشاركة مع اقسام اخري",
+    'main_archive'          => "الارشيف",
+    'delete_archive'        => "الغاء الارشفة",
+    'follow'                => "تتبع الملف",
+    
 ];

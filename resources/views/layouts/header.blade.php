@@ -20,7 +20,7 @@
                     <!-- Dark Logo icon -->
                     {{-- <img src="../../assets/images/logo-icon.png" alt="homepage" class="dark-logo" /> --}}
                     <!-- Light Logo icon -->
-                    <img src="../../assets/images/me.png" alt="homepage" class="light-logo"  style="width: 50px;height:50px; border-radius:50%" />
+                    <img src="{{ asset('assets/images/me.png') }}" alt="homepage" class="light-logo"  style="width: 50px;height:50px; border-radius:50%" />
                 </b>
                 <!--End Logo icon -->
                 <!-- Logo text -->
@@ -166,7 +166,7 @@
                                     <!-- Message -->
                                     <a href="javascript:void(0)" class="message-item">
                                         <span class="user-img">
-                                            <img src="../../assets/images/users/1.jpg" alt="user" class="rounded-circle">
+                                            <img src="{{ asset('assets/images/users/1.jpg') }}" alt="user" class="rounded-circle">
                                             <span class="profile-status online pull-right"></span>
                                         </span>
                                         <div class="mail-contnet">
@@ -178,7 +178,7 @@
                                     <!-- Message -->
                                     <a href="javascript:void(0)" class="message-item">
                                         <span class="user-img">
-                                            <img src="../../assets/images/users/2.jpg" alt="user" class="rounded-circle">
+                                            <img src="{{ asset('assets/images/users/2.jpg') }}" alt="user" class="rounded-circle">
                                             <span class="profile-status busy pull-right"></span>
                                         </span>
                                         <div class="mail-contnet">
@@ -190,7 +190,7 @@
                                     <!-- Message -->
                                     <a href="javascript:void(0)" class="message-item">
                                         <span class="user-img">
-                                            <img src="../../assets/images/users/3.jpg" alt="user" class="rounded-circle">
+                                            <img src="{{ asset('assets/images/users/3.jpg') }}" alt="user" class="rounded-circle">
                                             <span class="profile-status away pull-right"></span>
                                         </span>
                                         <div class="mail-contnet">
@@ -202,7 +202,7 @@
                                     <!-- Message -->
                                     <a href="javascript:void(0)" class="message-item">
                                         <span class="user-img">
-                                            <img src="../../assets/images/users/4.jpg" alt="user" class="rounded-circle">
+                                            <img src="{{ asset('assets/images/users/4.jpg') }}" alt="user" class="rounded-circle">
                                             <span class="profile-status offline pull-right"></span>
                                         </span>
                                         <div class="mail-contnet">
@@ -270,7 +270,7 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark pro-pic" href="" data-toggle="dropdown" aria-haspopup="true"
                         aria-expanded="false">
-                        <img src="../../assets/images/me.png" alt="user" class="rounded-circle" width="31">
+                        <img src="{{ asset('assets/images/me.png') }}" alt="user" class="rounded-circle" width="31">
                     </a>
                     <div class="dropdown-menu dropdown-menu-right user-dd animated flipInY">
                         <span class="with-arrow">
@@ -278,7 +278,7 @@
                         </span>
                         <div class="d-flex no-block align-items-center p-15 bg-primary text-white m-b-10">
                             <div class="">
-                                <img src="../../assets/images/me.png" alt="user" class="rounded-circle" width="60">
+                                <img src="{{ asset('assets/images/me.png') }}" alt="user" class="rounded-circle" width="60">
                             </div>
                             <div class="m-l-10">
                                 <h4 class="m-b-0">{{ auth()->user()->name }}</h4>

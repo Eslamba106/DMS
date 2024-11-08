@@ -8,12 +8,15 @@ use App\Models\Permission;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class RoleController extends Controller
 {
+    use AuthorizesRequests;
+
     public function index()
     {
-        // $this->authorize('Show_Admin_Roles');
+        $this->authorize('Show_Admin_Roles');
 
         $roles = Role::with('users')
             ->orderBy('created_at', 'asc')
@@ -29,7 +32,7 @@ class RoleController extends Controller
 
     public function create()
     {
-        // $this->authorize('Create_Admin_Roles');
+        $this->authorize('Create_Admin_Roles');
 
         $sections = Section::whereNull('section_group_id')
             ->with('children')
@@ -45,12 +48,12 @@ class RoleController extends Controller
 
     public function store(Request $request)
     {
-        // $this->authorize('Create_Admin_Roles');
+        $this->authorize('Create_Admin_Roles');
 
-        // $this->validate($request, [
-        //     'name' => 'required|min:3|max:64|unique:roles,name',
-        //     'caption' => 'required|min:3|max:64|unique:roles,caption',
-        // ]);
+        $request->validate(  [
+            'name' => 'required|min:3|max:64|unique:roles,name',
+            'caption' => 'required|min:3|max:64|unique:roles,caption',
+        ]);
 
         $data = $request->all();
 
@@ -73,9 +76,9 @@ class RoleController extends Controller
 
     public function edit($id)
     {
-        // $this->authorize('Edit_Admin_Roles');
-        // dd($id);
-        $role = Role::findOrFail($id);
+        $this->authorize('Edit_Admin_Roles');
+
+        $role = Role::find($id);
         $permissions = Permission::where('role_id', '=', $role->id)->get();
         $sections = Section::whereNull('section_group_id')
             ->with('children')
@@ -87,18 +90,18 @@ class RoleController extends Controller
             'permissions' => $permissions->keyBy('section_id')
         ];
 
-        return view('admin.roles.create', $data);
+        return view('admin.roles.edit', $data);
     }
 
     public function update(Request $request, $id)
     {
-        // $this->authorize('Update_Admin_Roles');
+        $this->authorize('Update_Admin_Roles');
 
         $role = Role::find($id);
 
-        $this->validate($request, [
-            'caption' => 'required',
-        ]);
+        // $this->validate($request, [
+        //     'caption' => 'required',
+        // ]);
 
         $data = $request->all();
 
@@ -121,7 +124,7 @@ class RoleController extends Controller
 
     public function destroy(Request $request)
     {
-        // $this->authorize('Delete_Admin_Roles');
+        $this->authorize('Delete_Admin_Roles');
 
         $role = Role::find($request->id);
         if ($role->id !== 2) {
