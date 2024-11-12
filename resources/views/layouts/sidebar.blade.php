@@ -140,83 +140,26 @@
                     </ul>
                 </li>
                 @endcan
-                {{-- <li class="sidebar-item">
-                    <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
-                        <i class="font-20 ti-email"></i>
+                @can('uploadpdf')
+                <li class="sidebar-item">
+                    <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)"
+                        aria-expanded="false">
+                        <i class="mdi mdi-archive"></i>
 
 
-                        <span class="hide-menu">{{ __("messages.all_messages") }} </span>
+                        <span class="hide-menu">{{ __('roles.external_files') }} </span>
                     </a>
                     <ul aria-expanded="false" class="collapse first-level">
                         <li class="sidebar-item">
-                            <a href="{{ route('messages.send_message' ,$user->id ) }}" class="sidebar-link">
-                                <i class="mdi mdi-email"></i>
-                                <span class="hide-menu">{{ __('messages.all_messages') }}</span>
-                            </a>
-                        </li>
-                            <li class="sidebar-item">
-                                <a href="{{ route('messages.store') }}" class="sidebar-link">
-                                    <i class="mdi mdi-email"></i>
-                                    <span class="hide-menu">{{ __('documents.create_document') }}</span>
-                                </a>
-                            </li>
-                       
-                    </ul>
-                </li> --}}
-                {{-- <li class="sidebar-item">
-                    <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
-                            
-                        <i class="fas fa-tags nav-icon"></i>
-
-
-                        <span class="hide-menu">{{ __("folders.all_folders") }} </span>
-                    </a>
-                    <ul aria-expanded="false" class="collapse first-level">
-                        <li class="sidebar-item">
-                            <a href="{{ route('all_departments') }}" class="sidebar-link">
-                                <i class="mdi mdi-email"></i>
-                                <span class="hide-menu">{{ __('folders.all_folders') }}</span>
-                            </a>
-                        </li>
-                            <li class="sidebar-item">
-                                <a href="{{ route('folders.create') }}" class="sidebar-link">
-                                    <i class="mdi mdi-email"></i>
-                                    <span class="hide-menu">{{ __('folders.create_folders') }}</span>
-                                </a>
-                            </li>
-                       
-                    </ul>
-                </li> --}}
-
-
-
-                {{-- <li class="sidebar-item">
-                    <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)
-                           " aria-expanded="false">
-                        <i class="icon-Add-User"></i>
-                        <span class="hide-menu">Users</span>
-                    </a>
-                    <ul aria-expanded="false" class="collapse first-level">
-                        <li class="sidebar-item">
-                            <a href="ui-user-card.html" class="sidebar-link">
-                                <i class="mdi mdi-account-box"></i>
-                                <span class="hide-menu"> User Card </span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a href="pages-profile.html" class="sidebar-link">
-                                <i class="mdi mdi-account-network"></i>
-                                <span class="hide-menu"> User Profile</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a href="ui-user-contacts.html" class="sidebar-link">
-                                <i class="mdi mdi-account-star-variant"></i>
-                                <span class="hide-menu"> User Contact</span>
+                            <a href="{{ route('documents.external') }}" class="sidebar-link">
+                                <i class="mdi mdi-archive"></i>
+                                <span class="hide-menu">{{ __('roles.external_files') }}</span>
                             </a>
                         </li>
                     </ul>
-                </li> --}}
+                </li>
+                @endcan
+
 
                 <li class="sidebar-item">
                     <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{ route('logout') }}"

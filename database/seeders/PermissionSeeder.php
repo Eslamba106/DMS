@@ -46,6 +46,8 @@ class PermissionSeeder extends Seeder
         \App\Models\Permission::updateOrCreate(['id' => 31], ['role_id' => 2, 'section_id' => 31, 'allow' => 1]);
         \App\Models\Permission::updateOrCreate(['id' => 32], ['role_id' => 2, 'section_id' => 32, 'allow' => 1]);
         \App\Models\Permission::updateOrCreate(['id' => 33], ['role_id' => 2, 'section_id' => 33, 'allow' => 1]);
+        \App\Models\Permission::updateOrCreate(['id' => 34], ['role_id' => 2, 'section_id' => 34, 'allow' => 1]);
+        \App\Models\Permission::updateOrCreate(['id' => 35], ['role_id' => 2, 'section_id' => 35, 'allow' => 1]);
 
 
     }

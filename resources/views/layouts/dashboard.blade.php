@@ -12,7 +12,7 @@
     <meta name="author" content="">
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('assets/images/favicon.png') }}">
-    <title> @yield('title') </title>
+    <title> @yield('title' , 'لوحة التحكم') </title>
     <!-- Custom CSS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">

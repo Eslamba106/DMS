@@ -52,12 +52,15 @@ class SectionSeeder extends Seeder
         Section::updateOrCreate(['id' => 29], ['name' => 'add_sginature',  'section_group_id' => 20, 'caption' => 'add_sginature']);
 
 
-        // Archive 30 - 
+        // Archive 30 - //
         Section::updateOrCreate(['id' => 30], ['name' => 'archive', 'caption' => 'archive']);
         Section::updateOrCreate(['id' => 31], ['name' => 'show_archive',  'section_group_id' => 30, 'caption' => 'show_archive']);
         Section::updateOrCreate(['id' => 32], ['name' => 'moved_to_archive',  'section_group_id' => 30, 'caption' => 'moved_to_archive']);
         Section::updateOrCreate(['id' => 33], ['name' => 'delete_from_archive',  'section_group_id' => 30, 'caption' => 'delete_from_archive']);
 
-        
+        // Upload Pdf File
+        Section::updateOrCreate(['id' => 34], ['name' => 'uploadpdf', 'caption' => 'uploadpdf']);
+        Section::updateOrCreate(['id' => 35], ['name' => 'save_pdf',  'section_group_id' => 34, 'caption' => 'uploadpdf']);
+
     }
 }

@@ -93,6 +93,10 @@ Route::group(['prefix' => 'documents'], function () {
     Route::get('/archive', [DocumentController::class, 'main_archive'])->name('documents.main_archive');
     Route::get('/delete_from_archive/{id}', [DocumentController::class, 'delete_archive'])->name('documents.delete_archive');
     Route::get('/follow/{id}', [DocumentController::class, 'follow'])->name('documents.follow');
+    Route::get('/external_files', [DocumentController::class, 'external_files'])->name('documents.external');
+    Route::post('/external_files/add', [DocumentController::class, 'uploadPdf'])->name('documents.uploadPdf');
+    Route::get('/external_files/delete/{id}', [DocumentController::class, 'deletePdf'])->name('documents.external_delete');
+    Route::get('/external_files/view/{id}', [DocumentController::class, 'viewPdf'])->name('documents.view');
 
 });
 // Messages web.send_message

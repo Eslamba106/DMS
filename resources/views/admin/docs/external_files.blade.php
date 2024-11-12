@@ -5,14 +5,14 @@
     $current_url = url()->current();
     $url = explode('/', $current_url);
     $end_url = end($url);
-    
+    $lang = Session::get('locale');
     ?>
-    {{ $end_url == 'archive' ? __('dashboard.main_archive') : __('documents.files') }}
+    {{ __('roles.external_files') }}
 @endsection
 
 
 @section('page_name')
-    {{ __('documents.files') }}
+    {{ __('roles.external_files') }}
 @endsection
 @section('css')
 @endsection
@@ -20,7 +20,7 @@
     <div class="page-breadcrumb">
         <div class="row">
             <div class="col-5 align-self-center">
-                <h4 class="page-title">{{ __('documents.files') }}</h4>
+                <h4 class="page-title">{{ __('roles.external_files') }}</h4>
                 <div class="d-flex align-items-center">
 
                 </div>
@@ -39,23 +39,21 @@
             </div>
         </div>
     </div>
-    @if ($end_url != 'archive')
-        @can('create_documents')
-            <div class="m-2 d-inline">
-                <a href="{{ route('documents.create') }}"
-                    class="btn btn-sm btn-outline-primary mt-2 mr-2 mb-4">{{ __('documents.add_document') }}</a>
-            </div>
+    <div style="{{ ($lang == 'ar' ) ? "text-align: left;" : "text-align: right;" }}">
+        @can('share_with_departments')
+            <a href="" class="btn btn-primary btn-sm m-2" data-toggle="modal" data-section_id=" " title="@lang('dashboard.share')"
+               data-target="#delete_section"> 
+               {{ __('roles.uploadpdf') }}
+            </a>
         @endcan
-    @endif
+    </div>
+
     <div class="table-responsive">
         <table class="table table-striped">
             <thead>
                 <tr>
                     <th><input class="bulk_check_all" type="checkbox" /></th>
                     <th scope="col">{{ __('roles.name') }}</th>
-                    {{-- @if()
-                        <th scope="col">{{ __('roles.name') }}</th>
-                    @endif --}}
                     <th scope="col">{{ __('roles.Actions') }}</th>
                 </tr>
             </thead>
@@ -70,44 +68,21 @@
                             </label>
                         </th>
                         <td>{{ $document->name }}</td>
+
                         <td>
 
                             @can('show_documents')
-                                <a href="{{ route('documents.show', $document->id) }}" class="btn btn-outline-info btn-sm"
+                                <a href="{{ route('documents.view', $document->id) }}" class="btn btn-outline-info btn-sm"
                                     title="@lang('dashboard.show')" target="_blank"><i class="mdi mdi-monitor"></i></a>
                             @endcan
                             @can('delete_documents')
-                                <a href="{{ route('documents.delete', $document->id) }}" class="btn btn-danger btn-sm"
+                                <a href="{{ route('documents.external_delete', $document->id) }}" class="btn btn-danger btn-sm"
                                     title="@lang('dashboard.delete')"><i class="fa fa-trash"></i></a>
                             @endcan
 
-                            @if ($end_url == 'archive')
-                                @can('delete_from_archive')
-                                    <a href="{{ route('documents.delete_archive', $document->id) }}"
-                                        class="btn btn-success btn-sm" title="@lang('dashboard.delete_archive')"><i
-                                            class="mdi mdi-archive"></i></a>
-                                @endcan
-                            @else
-                                @can('moved_to_archive')
-                                    <a href="{{ route('documents.archive', $document->id) }}" class="btn btn-success btn-sm"
-                                        title="@lang('dashboard.archive')"><i class="mdi mdi-archive"></i></a>
-                                @endcan
-                            @endif
-                            @can('share_with_departments')
 
-                            <a href="" class="btn btn-primary btn-sm" data-toggle="modal"
-                                data-section_id="{{ $document->id }}" title="@lang('dashboard.share')"
-                                data-target="#delete_section"><i class="mdi mdi-share"></i></a>
-                                @endcan
-                                @can('follow_document')
-                            <a href="{{ route('documents.follow', $document->id) }}" class="btn btn-outline-info btn-sm"
-                                title="@lang('dashboard.follow')" target="_blank"><i class="fa fa-eye"></i> </a>
-                                @endcan
-                                @can('edit_documents')
 
-                            <a href="{{ route('documents.edit', $document->id) }}" class="btn btn-outline-info btn-sm"
-                                title="@lang('dashboard.edit')" target="_blank"><i class="mdi mdi-pencil"></i> </a>
-                                @endcan
+
                         </td>
                     </tr>
                 @empty
@@ -123,25 +98,26 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">{{ __('dashboard.share') }}</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">{{  __('roles.uploadpdf') }}</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="{{ route('add_to_department') }}" method="post">
+                <form action="{{ route('documents.uploadPdf') }}" method="post" enctype="multipart/form-data">
                     @csrf
 
                     <div class="modal-body">
-                        <input type="hidden" name="document_id" id="delete_section" value="">
                         <div class="form-group">
-                            <label for="">{{ __('departments.departments') }}</label>
-                            <select name="department_id[]" class="form-control select2" multiple="multiple">
-                                <option value="">{{ __('departments.select_department') }}</option>
-                                @foreach ($departments as $department)
-                                    <option value="{{ $department->id }}">{{ $department->name }}</option>
-                                @endforeach
-                            </select>
+                            <label for="">{{ __('roles.name') }}</label>
+                            <input type="text" name="name"  class="form-control">
                         </div>
+                        <div class="form-group">
+                            <label for="">{{ __('documents.file') }}</label>
+
+                            <input type="file" name="file"  class="form-control">
+
+                        </div>
+                         
 
                     </div>
                     <div class="modal-footer">

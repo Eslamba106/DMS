@@ -7,10 +7,12 @@ use App\Models\Department;
 use App\Models\Document;
 use App\Models\DocumentLog;
 use App\Models\Signature;
+use App\Models\UploadPdf;
 use App\Models\User;
 use App\Services\DocumentService;
-use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class DocumentController extends Controller
 {
@@ -33,7 +35,7 @@ class DocumentController extends Controller
         $this->authorize('show_archive');
         $documents = Document::onlyTrashed()->paginate();
         $departments = Department::get();
-        // dd();/
+
         return view('admin.docs.index', compact('documents', 'departments'));
     }
     public function store(Request $request)
@@ -130,15 +132,14 @@ class DocumentController extends Controller
             ]);
         }
 
-        $newDepartments = is_array($request->department_id) ? $request->department_id : []; 
+        $newDepartments = is_array($request->department_id) ? $request->department_id : [];
 
         $addedDepartments = array_diff($newDepartments, $oldDepartments);
         $removedDepartments = array_diff($oldDepartments, $newDepartments);
-        
-         
+
         foreach ($addedDepartments as $departmentId) {
-            $department = Department::find($departmentId); 
-            if ($department) {  
+            $department = Department::find($departmentId);
+            if ($department) {
                 DocumentLog::create([
                     'document_id' => $document->id,
                     'user_id' => $owner->id,
@@ -147,7 +148,7 @@ class DocumentController extends Controller
                 ]);
             }
         }
-        
+
         // تسجيل الأقسام المحذوفة
         foreach ($removedDepartments as $departmentId) {
             $department = Department::find($departmentId); // استخدم find للحصول على القسم مباشرة
@@ -160,8 +161,6 @@ class DocumentController extends Controller
                 ]);
             }
         }
-        
-        
 
         return back()->with('success', 'تم تعديل الملف بنجاح');
     }
@@ -207,6 +206,12 @@ class DocumentController extends Controller
         $document = Document::where('id', $request->document_id)->first();
         if ($document && $request->has('department_id')) {
             $document->departments()->attach($request->department_id);
+            DocumentLog::create([
+                'document_id' => $request->document_id,
+                'user_id' => auth()->id(),
+                'action' => 'شارك المستند',
+                'created_at' => now(),
+            ]);
         }
         return redirect()->back()->with('success', 'تم الاضافة بنجاح');
     }
@@ -215,12 +220,18 @@ class DocumentController extends Controller
         $this->authorize('archive');
         $docs = Document::findOrFail($id);
         $docs->delete();
+        DocumentLog::create([
+            'document_id' => $id,
+            'user_id' => auth()->id(),
+            'action' => 'نقل المستند الي الارشيف',
+            'created_at' => now(),
+        ]);
         return redirect()->back()->with('success', 'تم الاضافة الي الارشيف');
     }
     public function delete_archive($id)
     {
         $this->authorize('delete_from_archive');
-  
+
         $docs = Document::withTrashed()->where('id', $id)->restore();
 
         return redirect()->back()->with('success', 'تم الغاء الارشفة');
@@ -237,9 +248,59 @@ class DocumentController extends Controller
         $this->authorize('follow_document');
 
         $docs = Document::findOrFail($id);
-        $actions = DocumentLog::orderBy('created_at' , 'asc')->get();
-        return view('admin.docs.follow' , compact('docs' , 'actions'));
+        $actions = DocumentLog::orderBy('created_at', 'asc')->get();
+        return view('admin.docs.follow', compact('docs', 'actions'));
     }
+    public function external_files()
+    {
+        $this->authorize('uploadpdf');
 
+        $documents = UploadPdf::paginate();
+        return view('admin.docs.external_files', compact('documents'));
+    }
+    public function uploadPdf(Request $request)
+    {
+        $this->authorize('save_pdf');
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'file' => 'required|mimes:pdf|max:2048',
+        ]);
+
+        $file = $request->file('file');
+        $fileName = time() . '_' . $file->getClientOriginalName();
+        $file->storeAs('pdfs', $fileName, 'public');
+        $document = new UploadPdf();
+        $document->user_id = auth()->user()->id;
+        $document->name = $request->input('name');
+        $document->path = 'pdfs/' . $fileName;
+        $document->save();
+
+        return redirect()->route('documents.external')->with('success', 'تم الرفع بنجاح');
+    }
+    public function deletePdf($id)
+    {
+        $document = UploadPdf::find($id);
+        if (!$document) {
+            return back()->with('error', 'الملف غير موجود');
+        }
+        Storage::disk('public')->delete($document->path);
+
+        $document->delete();
+        return back()->with('success', 'تم حذف الملف بنجاح');
+    }
+    public function viewPdf($id)
+    {
+        $document = UploadPdf::find($id);
+         if (!$document  ) {
+            return back()->with('error', 'الملف غير موجود');
+        }  
+         $filePath = storage_path('app/public/' . $document->path);
+    
+        if (!file_exists($filePath)) {
+            return back()->with('error', 'الملف غير موجود');
+        }
+    
+        // عرض الملف باستخدام دالة file
+        return response()->file($filePath);    }
 
 }

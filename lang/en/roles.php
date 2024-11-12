@@ -53,4 +53,6 @@ return [
     'show_archive' => "Show Archive",
     'show_departments_documents' => "Show Departments Documents",
     'add_sginature' => "Add Signature",
+    'uploadpdf'                         => "Upload External File",
+    'external_files'                         => "External File",
 ];  

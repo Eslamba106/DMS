@@ -53,4 +53,6 @@ return [
     'show_archive'        => "عرض الارشيف",
     "show_departments_documents"        => "عرض مستندات قسم معين",
     "add_sginature"                     => "اضافة توقيع",
+    'uploadpdf'                         => "تحميل ملفات خارجية",
+    'external_files'                    => "الملفات الخارجية",
 ];

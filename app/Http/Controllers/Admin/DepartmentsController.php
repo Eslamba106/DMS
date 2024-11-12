@@ -16,7 +16,13 @@ class DepartmentsController extends Controller
     public function index(Request $request){
         $this->authorize('departments');
         $this->authorize('all_departments');
+        if(auth()->user()->role_id != 2 ){
+            $departments = Department::whereHas('users', function ($query) {
+                $query->where('user_id', auth()->id());
+            })->paginate();
+            return view('admin.departments.all_departments' , compact('departments'));
 
+        }
         $ids = $request->bulk_ids;
         $now = Carbon::now()->toDateTimeString();
         if ($request->bulk_action_btn === 'delete' &&  is_array($ids) && count($ids)) {

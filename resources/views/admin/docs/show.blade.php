@@ -54,11 +54,11 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            <div class="card card-body printableArea">
+            <div class="card card-body ">
                 <h3><b>{{ $document->name }}</b> <span class="pull-right"></span></h3>
                 <hr>
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-12 printableArea">
                         {!! clean_html($document->content) !!}
                         @if ($document->signature->isNotEmpty())
                         <div style="display: flex; justify-content: space-between; flex-wrap: wrap;margin-top:30px">
@@ -79,11 +79,11 @@
                                 <img width="100px" height="100px" src="{{ $signature->image }}" alt="Signature">
                             @endforeach
                         @endif --}}
-                        <hr class="custom-class">
+                        
                     </div>
 
                     <div class="col-md-12">
-
+                        <hr class="custom-class">
                         <div class="pull-right mt-5 {{ Session::get('locale') == 'en' ? 'text-right' : 'text-left' }}">
                             <address>
                                 <h4 class="font-bold">{{ __('dashboard.created_by') }} : {{ $document->owners->name }}</h4>
