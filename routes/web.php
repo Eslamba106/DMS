@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 
 // // Translation
-Route::get('lang/{locale}', function ($locale) {
+Route::get('language/{locale}', function ($locale) {
     if (in_array($locale, ['en', 'ar'])) {
         Session::put('locale', $locale);
     }

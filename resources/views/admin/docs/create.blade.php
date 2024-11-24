@@ -105,8 +105,8 @@
     <script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
 
     <!-- This Page JS -->
-    <script src="../../assets/libs/tinymce/tinymce.min.js"></script>
-    <script src="../../assets/libs/tinymce/themes/modern/theme.min.js"></script>
+    <script src="{{ asset('assets/libs/tinymce/tinymce.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/tinymce/themes/modern/theme.min.js') }}"></script>
     <script>
         $(document).ready(function() {
 
